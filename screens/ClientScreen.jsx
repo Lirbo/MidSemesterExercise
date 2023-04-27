@@ -4,7 +4,7 @@ import React from 'react'
 export default function ClientScreen() {
   return (
     <View>
-      <Text>ClientScreen</Text>
+      <Text>ClientScreen ASJFOIJGOA</Text>
     </View>
   )
 }

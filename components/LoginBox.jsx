@@ -1,36 +1,26 @@
 import { View, Text, StyleSheet, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
 import { Stack, TextInput, IconButton } from "@react-native-material/core";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 import UsersJSON from '../data/users.json';
 
-export default function LoginBox({navigation}) {
+export default function LoginBox({ navigation }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [users, setUsers] = useState('');
-
-  useEffect(() => {
-    loadUsers();
-  }, []);
-
-  function loadUsers() {
-    try {
-      setUsers(UsersJSON);
-    }
-    catch (error) {
-      console.error(error);
+  const [currentUser, setCurrentUser] = useState('');
+  const { authenticateUser } = useContext(UserContext);
+  function login() {
+    let user = authenticateUser(username, password);
+    if (user) {
+      if (user.admin <= 0)
+        navigation.navigate("ClientScreen");
+      else
+        navigation.navigate("AdminScreen");
     }
   }
 
-  function authenticateUser(){
-    let user = users.find((u)=>u.username == username && u.password == password);
-    if(user){
-      navigation.navigate('ClientScreen');
-    }
-    else{
-      alert("Username or password is incorrect!");
-    }
-  }
+
 
   return (
     <View style={styles.container}>
@@ -54,7 +44,7 @@ export default function LoginBox({navigation}) {
             />
           )}
         />
-        <TouchableOpacity onPress={authenticateUser}>
+        <TouchableOpacity onPress={login}>
           <View style={styles.loginbutton}>
             <Text style={styles.loginbuttontext}>Login</Text>
           </View>
